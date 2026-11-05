@@ -1,0 +1,20 @@
+# Original data: restore with scripts/download_data.sh
+phage_raw_data/
+host_raw_data/
+all_phage_db/
+all_host_db/
+code/swiss/
+all_phage_seq.fasta
+all_host_seq.fasta
+
+# Graphify working files (GRAPH_REPORT.md, graph.json and graph.html are kept)
+graphify-out/cache/
+graphify-out/.graphify_*
+
+# Local runs and temp files
+run_out/
+run_tmp/
+.download_data.*
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store

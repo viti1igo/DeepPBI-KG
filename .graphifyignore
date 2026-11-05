@@ -1,0 +1,15 @@
+all_host_db/
+all_phage_db/
+host_raw_data/
+phage_raw_data/
+host_align_result/
+phage_align_result/
+example_host/
+example_phage/
+example_host_annotation/
+example_phage_annotation/
+example_output/
+template/
+code/swiss/
+code/GO/
+graphify-out/
