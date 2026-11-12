@@ -11,8 +11,8 @@ def parseIDmapping(filename):
     UniProt_GO = {}
     with gzip.open(filename, 'r') as f:
         for line in f:
-            lsplit = line.decode().rstrip().split("\t")
-            if lsplit[7]:
+            lsplit = line.decode().rstrip("\n").split("\t")
+            if lsplit[6]:
                 UniProt_GO[lsplit[0]] = lsplit[6]
     return UniProt_GO
 

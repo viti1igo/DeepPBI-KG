@@ -49,15 +49,17 @@ The correct scalers support the idea better, but not "always": a few organisms s
 
 ## Important
 
-### 3. UniProt filter checks the wrong column
-`code/UniProt2GO_annotate.py:15-16`
+### 3. UniProt filter checked the wrong column (fixed 2026-11-06)
+`code/UniProt2GO_annotate.py:14-16`
 
-It tests `lsplit[7]` but stores `lsplit[6]`. In UniProt's standard file these are the UniRef100 and GO columns, so proteins without GO terms can produce empty values. Notebook cells 4-5 currently remove them. **Fix:** test `lsplit[6]`.
+It tested `lsplit[7]` but stored `lsplit[6]`. In UniProt's `idmapping_selected.tab` these are the UniRef100 and GO columns, so proteins without GO terms produced empty values, which notebook cells 4-5 then removed. Proteins with GO terms but no UniRef100 entry would have lost those terms, and rows with nothing after the GO column raised `IndexError`.
+
+**Fixed:** it now tests `lsplit[6]` and strips only the newline. On UniProt's 1,000-row example file, output went from 1,000 genes (298 with blank GO values) to 702 genes with none. No row in that file has GO terms without UniRef100, so that loss wasn't seen there. Saved results weren't regenerated, because the inputs are missing.
 
 ### 4. GO parser drops alternate IDs and the hierarchy
 `code/parse_go_obofile.py:38,46`
 
-Line 46 replaces the table holding the alternate IDs. It also ignores `is_a` edges, which the GO task needs, and `DataFrame.append` was removed in pandas 2. The effect on existing results is small: 51 of 54,931 saved pairs use alternate IDs. **Fix:** replace it with a small parser that keeps parents and alternate IDs.
+Line 46 replaces the table holding the alternate IDs. It also ignores `is_a` edges, which the GO task needs, and `DataFrame.append` was removed in pandas 2. The effect on existing results is small: 51 of 54,931 saved pairs use alternate IDs. **Fix:** `scripts/go_dag.py` now has a parser that keeps parents and alternate IDs. `code/parse_go_obofile.py` itself is unchanged, so `code/GO/go.tb` should move to the new parser the next time it is regenerated.
 
 ### 5. Enrichment plots don't do what they say
 `code/GO_KEGG.R:26,33-38,43`
@@ -80,7 +82,7 @@ The last two are from reading the code; the script couldn't be run.
 Training data and enrichment inputs are missing. `requirements.txt` omits `matplotlib`, `seaborn` and `scipy`, and the current server env has NumPy 2.0.2 with no Biopython or dominate, so the demo fails there. **Fix:** ask upstream for the training data, and replace `requirements.txt` with the versions in `GETTING_STARTED.md`.
 
 ### 8. No automated tests
-**Fix:** add the demo comparison as a test, then GO DAG tests with the new code.
+GO DAG tests now exist: `python tests/test_go_dag.py`. **Fix:** add the demo comparison as a test.
 
 ## Suggestions
 

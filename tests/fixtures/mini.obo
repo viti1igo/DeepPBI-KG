@@ -1,0 +1,32 @@
+format-version: 1.2
+data-version: releases/test-fixture
+
+[Term]
+id: GO:0003674
+name: molecular_function
+namespace: molecular_function
+
+[Term]
+id: GO:0005575
+name: cellular_component
+namespace: cellular_component
+
+[Term]
+id: GO:0003677
+name: DNA binding
+namespace: molecular_function
+subset: goslim_metagenomics
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0005737
+name: cytoplasm
+namespace: cellular_component
+subset: goslim_metagenomics
+is_a: GO:0005575 ! cellular_component
+
+[Term]
+id: GO:0016020
+name: membrane
+namespace: cellular_component
+is_a: GO:0005575 ! cellular_component

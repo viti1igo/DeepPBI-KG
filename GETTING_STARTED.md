@@ -8,7 +8,7 @@ DeepPBI-KG predicts phage-bacterium interactions with a deep neural network, usi
 |---|---|
 | [docs/GO_TASK_STATUS.md](docs/GO_TASK_STATUS.md) | The original task, what is done, and what to do next |
 | [docs/CODE_REVIEW.md](docs/CODE_REVIEW.md) | Known bugs, and why `feature_similarity_report.md` can't be trusted yet |
-| [graphify-out/GRAPH_REPORT.md](graphify-out/GRAPH_REPORT.md) | Map of the code and docs |
+| [scripts/README.md](scripts/README.md) | How to run the GO scripts, and which data and GO releases they use |
 | [ReadMe.md](ReadMe.md) | Upstream install and usage guide |
 
 Then check the real state with `git status` and `git log --oneline -5`.
@@ -114,16 +114,16 @@ Recheck the WGS vs KG numbers:
 python scripts/check_feature_similarity.py
 ```
 
-Measure where saved GO annotations sit in the hierarchy (standard library only):
+Move saved GO annotations up the hierarchy to a GO slim and a chosen level, and measure where they sit (standard library only; `code/GO/go-basic.obo` is the 2022 release, so use a current one for new results):
 
 ```bash
-python scripts/go_annotation_depth.py
+python scripts/go_rollup.py code/GO/go-basic.obo code/富集分析data_process.ipynb go_rollup_out --genes host_key=model/host_key_gene_0.00004.csv --genes phage_key=model/phage_key_gene_0.0001.csv
 ```
 
-Query the knowledge graph (`pip install graphifyy` first):
+Extract GO terms for any proteins, or from eggNOG-mapper or InterProScan output, and summarise them. See [scripts/README.md](scripts/README.md) for downloads and options:
 
 ```bash
-graphify query "where do key gene features get generated?"
+python scripts/go_extract.py run proteins.faa out --db go_data/sprot_2026_03_db --sprot go_data/uniprot_sprot_2026_03.dat.gz --obo go_data/go-basic.obo
 ```
 
 ## 5. Where things are
@@ -139,7 +139,7 @@ graphify query "where do key gene features get generated?"
 | `code/visualize_features.py`, `feature_similarity_report.md` | WGS vs KG comparison |
 | `model/` | Pretrained models, scalers, key gene lists |
 | `template/`, `example_*`, `*_align_result/` | Saved intermediate files, demo inputs and demo results |
-| `scripts/` | Data download and recheck scripts |
+| `scripts/` | GO scripts (see `scripts/README.md`), data download and recheck scripts |
 
 ## 6. Running on a Mac
 
@@ -148,7 +148,6 @@ Copying the project is fine, but prediction always uses the CPU and `code/train.
 ## 7. Things to know
 
 - **`feature_similarity_report.md` is out of date.** It disagrees with its own figures, so use the numbers in `docs/CODE_REVIEW.md`.
-- **`.agent/rules/AGENT.md` is a finished plan.** It describes the WGS vs KG work, not the current task.
 - **Upstream has no license.** Keep this repo private unless upstream gives permission.
 - **Paths starting `.../`** in the R script and notebooks are placeholders for files we don't have.
-- **There are no automated tests.** Step 3 is the only regression check.
+- **Tests cover the GO code only:** run `python tests/test_go_dag.py` and `python tests/test_go_extract.py`. Step 3 is the only regression check for prediction.

@@ -7,14 +7,23 @@ code/swiss/
 all_phage_seq.fasta
 all_host_seq.fasta
 
-# Graphify working files (GRAPH_REPORT.md, graph.json and graph.html are kept)
-graphify-out/cache/
-graphify-out/.graphify_*
+# Local tool and agent files
+graphify-out/
+.graphifyignore
+CLAUDE.md
+.agent/
+task*.md
 
 # Local runs and temp files
 run_out/
 run_tmp/
+go_rollup_out/
+papers/
 .download_data.*
 __pycache__/
 .ipynb_checkpoints/
 .DS_Store
+
+# exFAT sidecar files and local GO downloads
+._*
+go_data/
